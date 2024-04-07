@@ -8,6 +8,8 @@ from langchain_community.vectorstores import FAISS
 from langchain.memory import ConversationBufferMemory
 from langchain.chains import ConversationalRetrievalChain
 
+from templates import css, bot_template, user_template
+
 
 def get_pdf_text(pdfs):
     text = ""
@@ -37,16 +39,35 @@ def create_conversation_chain(vector_store):
     return conversation_chain
 
 
+def handler_user_question(user_question):
+    response = st.session_state.conversation({'question': user_question})
+    st.session_state.chat_history = response['chat_history']
+
+    for i, message in enumerate(st.session_state.chat_history):
+        if i % 2 == 0:
+            st.write(user_template.replace("{{MSG}}", message.content), unsafe_allow_html=True)
+        else:
+            st.write(bot_template.replace("{{MSG}}", message.content), unsafe_allow_html=True)
+
+    st.write(response)
+
+
 def main():
     title = "Chat with PDFs"
     icon = ":books:"
     st.set_page_config(page_title=title, page_icon=icon)
 
+    st.write(css, unsafe_allow_html=True)
+
     if "conversation" not in st.session_state:
         st.session_state.conversation = None
+    if "chat_history" not in st.session_state:
+        st.session_state.chat_history = None
 
     st.header(f"{title} {icon}")
-    st.text_input("Ask a question about your PDFs:")
+    user_question = st.text_input("Ask a question about your PDFs:")
+    if user_question:
+        handler_user_question(user_question)
 
     with st.sidebar:
         st.subheader("Your PDFs")
