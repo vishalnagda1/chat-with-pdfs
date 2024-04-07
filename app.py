@@ -11,7 +11,7 @@ def main():
 
     with st.sidebar:
         st.subheader("Your PDFs")
-        st.file_uploader("Upload your PDFs here and click on 'Process'", accept_multiple_files=True)
+        st.file_uploader("Upload your PDFs here and click on 'Process'", type=["pdf"], accept_multiple_files=True)
         st.button("Process")
 
 if __name__ == "__main__":
