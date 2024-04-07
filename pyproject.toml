@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "chat-with-pdfs"
+version = "0.1.0"
+description = "A program to chat with multiple pdf files using artificial intelligence."
+authors = ["Vishal Nagda <vishalnagda1@users.noreply.github.com>"]
+license = "GNU GENERAL PUBLIC LICENSE v3.0"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
