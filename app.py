@@ -2,6 +2,12 @@ import streamlit as st
 
 from PyPDF2 import PdfReader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
+from langchain_community.llms import Ollama
+from langchain_community.embeddings import OllamaEmbeddings
+from langchain_community.vectorstores import FAISS
+
+
+llm = Ollama(model="llama2")
 
 
 def get_pdf_text(pdfs):
@@ -17,6 +23,12 @@ def create_text_chunks(text):
     text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200, length_function = len)
     chunks = text_splitter.split_text(text)
     return chunks
+
+
+def create_vector_store(chunks):
+    embeddings = OllamaEmbeddings()
+    vector_store = FAISS.from_texts(texts=chunks, embedding=embeddings)
+    return vector_store
 
 
 def main():
@@ -40,6 +52,7 @@ def main():
                 chunks = create_text_chunks(raw_text)
 
                 # create vector store
+                vector_store = create_vector_store(chunks)
 
 if __name__ == "__main__":
     main()
