@@ -33,7 +33,7 @@ def create_vector_store(chunks):
 
 
 def create_conversation_chain(vector_store):
-    llm = ChatOllama(model="llama2")
+    llm = ChatOllama(model="llama2", base_url="http://localhost:11434")
     memory = ConversationBufferMemory(memory_key="chat_history", return_messages=True)
     conversation_chain = ConversationalRetrievalChain.from_llm(llm=llm, retriever=vector_store.as_retriever(), memory=memory)
     return conversation_chain
@@ -48,8 +48,6 @@ def handler_user_question(user_question):
             st.write(user_template.replace("{{MSG}}", message.content), unsafe_allow_html=True)
         else:
             st.write(bot_template.replace("{{MSG}}", message.content), unsafe_allow_html=True)
-
-    st.write(response)
 
 
 def main():
