@@ -46,3 +46,10 @@ def get_chroma_instance():
     """
     return Chroma(embedding_function=_OEMBED, client=connect_chroma())
 
+
+def get_chroma_collection(instance=get_chroma_instance()):
+    """
+    Returns the Chroma collection instance.
+    """
+    return instance._collection
+
