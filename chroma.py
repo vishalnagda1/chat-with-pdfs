@@ -167,7 +167,7 @@ def search_documents(question, vector_store=get_chroma_instance()):
     return vector_store.similarity_search(question)
 
 
-def retriever(question, vector_store=get_chroma_instance()):
+def retriever(vector_store=get_chroma_instance()):
     """
     Retrieves documents relevant to a given question from the Chroma database.
 
@@ -178,8 +178,7 @@ def retriever(question, vector_store=get_chroma_instance()):
     Returns:
         List: List of retrieved documents.
     """
-    retriever = vector_store.as_retriever()
-    return retriever.invoke(question)
+    return vector_store.as_retriever()
 
 
 def find_document_by_file(file, vector_store=get_chroma_instance()):
