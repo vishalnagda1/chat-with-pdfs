@@ -1,41 +1,26 @@
 import streamlit as st
 
 from PyPDF2 import PdfReader
-from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.chat_models import ChatOllama
-from langchain_community.embeddings import OllamaEmbeddings
-from langchain_community.vectorstores import FAISS
 from langchain.memory import ConversationBufferMemory
 from langchain.chains import ConversationalRetrievalChain
 
 from templates import css, bot_template, user_template
+from chroma import store_text_in_vector, retriever
 
 
-def get_pdf_text(pdfs):
-    text = ""
+def store_pdf_text_to_vector(pdfs):
     for pdf in pdfs:
+        file_text = ""
         pdf_reader = PdfReader(pdf)
         for page in pdf_reader.pages:
-            text += page.extract_text()
-    return text
+            file_text += page.extract_text()
+        store_text_in_vector(file=pdf, raw_text=file_text)
 
-
-def create_text_chunks(text):
-    text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200, length_function = len)
-    chunks = text_splitter.split_text(text)
-    return chunks
-
-
-def create_vector_store(chunks):
-    embeddings = OllamaEmbeddings()
-    vector_store = FAISS.from_texts(texts=chunks, embedding=embeddings)
-    return vector_store
-
-
-def create_conversation_chain(vector_store):
-    llm = ChatOllama(model="llama2", base_url="http://localhost:11434")
+def create_conversation_chain():
+    llm = ChatOllama(model="llama3")
     memory = ConversationBufferMemory(memory_key="chat_history", return_messages=True)
-    conversation_chain = ConversationalRetrievalChain.from_llm(llm=llm, retriever=vector_store.as_retriever(), memory=memory)
+    conversation_chain = ConversationalRetrievalChain.from_llm(llm=llm, retriever=retriever(), memory=memory)
     return conversation_chain
 
 
@@ -58,9 +43,9 @@ def main():
     st.write(css, unsafe_allow_html=True)
 
     if "conversation" not in st.session_state:
-        st.session_state.conversation = None
+        st.session_state.conversation = create_conversation_chain()
     if "chat_history" not in st.session_state:
-        st.session_state.chat_history = None
+        st.session_state.chat_history = []
 
     st.header(f"{title} {icon}")
     user_question = st.text_input("Ask a question about your PDFs:")
@@ -73,17 +58,11 @@ def main():
         
         if st.button("Process"):
             with st.spinner("Processing"):
-                # fetch file text
-                raw_text = get_pdf_text(files)
-
-                # create text chunks
-                chunks = create_text_chunks(raw_text)
-
-                # create vector store
-                vector_store = create_vector_store(chunks)
+                # store file text into chroma db
+                store_pdf_text_to_vector(files)
 
                 # create conversation chain
-                st.session_state.conversation = create_conversation_chain(vector_store)
+                st.session_state.conversation = create_conversation_chain()
 
 if __name__ == "__main__":
     main()
