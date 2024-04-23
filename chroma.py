@@ -136,3 +136,18 @@ def search_documents(question, vector_store=get_chroma_instance()):
     """
     return vector_store.similarity_search(question)
 
+
+def retriever(question, vector_store=get_chroma_instance()):
+    """
+    Retrieves documents relevant to a given question from the Chroma database.
+
+    Args:
+        question: Query string for retrieval.
+        vector_store: Optional. Instance of Chroma. Defaults to the global instance.
+
+    Returns:
+        List: List of retrieved documents.
+    """
+    retriever = vector_store.as_retriever()
+    return retriever.invoke(question)
+
