@@ -39,3 +39,10 @@ def connect_chroma():
         )
     return _chroma
 
+
+def get_chroma_instance():
+    """
+    Returns an instance of Chroma with configured embedding function and client.
+    """
+    return Chroma(embedding_function=_OEMBED, client=connect_chroma())
+
