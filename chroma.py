@@ -54,6 +54,36 @@ def get_chroma_collection(instance=get_chroma_instance()):
     return instance._collection
 
 
+def store_text_in_vector(file, raw_text):
+    """
+    Stores text data into the Chroma database after processing.
+
+    Args:
+        file: File object containing metadata.
+        raw_text: Raw text content to be stored.
+
+    Returns:
+        bool: True if storing is successful, False otherwise.
+    """
+    try:
+        deleted_docs = delete_existing_file_documents(file)
+        print("Total documents deleted are: %s" % deleted_docs)
+
+        print("Total documents before insert are: %s" % count_all_documents())
+
+        documents = generate_documents(file, raw_text)
+        print("Generated documents : %s" % documents)
+
+        store_documents(documents=documents)
+
+        print("Total documents after insert are: %s" % count_all_documents())
+        return True
+    except Exception as e:
+        print("Error while storing documents in Chroma db: %s" % e)
+        print(traceback.format_exc())
+        return False
+
+
 def count_all_documents():
     """
     Counts all documents in the Chroma database.
