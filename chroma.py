@@ -90,3 +90,20 @@ def generate_documents(file, raw_text):
     """
     return [Document(page_content=raw_text, metadata=generate_metadata(file))]
 
+
+def split_documents(documents, chunk_size=1000, chunk_overlap=200):
+    """
+    Splits documents into smaller chunks for processing.
+
+    Args:
+        documents: List of Document objects.
+        chunk_size: Optional. Size of each chunk. Defaults to 1000.
+        chunk_overlap: Optional. Overlap size between chunks. Defaults to 200.
+
+    Returns:
+        list: List of Document objects with smaller chunks of text.
+    """
+    return RecursiveCharacterTextSplitter(
+        chunk_size=chunk_size, chunk_overlap=chunk_overlap
+    ).split_documents(documents)
+
