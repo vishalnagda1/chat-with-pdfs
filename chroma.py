@@ -107,3 +107,18 @@ def split_documents(documents, chunk_size=1000, chunk_overlap=200):
         chunk_size=chunk_size, chunk_overlap=chunk_overlap
     ).split_documents(documents)
 
+
+def store_documents(documents):
+    """
+    Stores Document objects into the Chroma database.
+
+    Args:
+        documents: List of Document objects to be stored.
+
+    Returns:
+        Chroma instance
+    """
+    return Chroma.from_documents(
+        documents=split_documents(documents), embedding=_OEMBED, client=connect_chroma()
+    )
+
