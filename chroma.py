@@ -76,3 +76,17 @@ def generate_metadata(file):
     """
     return {"filename": file.name}
 
+
+def generate_documents(file, raw_text):
+    """
+    Generates Document objects from raw text content and file metadata.
+
+    Args:
+        file: File object containing metadata.
+        raw_text: Raw text content to be stored.
+
+    Returns:
+        list: List of Document objects.
+    """
+    return [Document(page_content=raw_text, metadata=generate_metadata(file))]
+
