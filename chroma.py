@@ -122,3 +122,17 @@ def store_documents(documents):
         documents=split_documents(documents), embedding=_OEMBED, client=connect_chroma()
     )
 
+
+def search_documents(question, vector_store=get_chroma_instance()):
+    """
+    Searches for documents related to a given question in the Chroma database.
+
+    Args:
+        question: Query string to search for.
+        vector_store: Optional. Instance of Chroma. Defaults to the global instance.
+
+    Returns:
+        List: List of relevant documents.
+    """
+    return vector_store.similarity_search(question)
+
