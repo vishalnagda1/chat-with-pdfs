@@ -165,3 +165,32 @@ def find_document_by_file(file, vector_store=get_chroma_instance()):
     """
     return vector_store.get(where=generate_metadata(file))
 
+
+def delete_document(documents):
+    """
+    Deletes documents from the Chroma database.
+
+    Args:
+        documents: Dictionary containing document IDs to delete.
+
+    Returns:
+        int: Total count of documents deleted.
+    """
+    ids = documents.get("ids", [])
+    total_ids = len(ids)
+    if total_ids:
+        get_chroma_collection().delete(ids=ids)
+    return total_ids
+
+
+def delete_existing_file_documents(file):
+    """
+    Deletes documents associated with a specific file from the Chroma database.
+
+    Args:
+        file: File object to delete associated documents.
+
+    Returns:
+        int: Total count of documents deleted.
+    """
+    return delete_document(find_document_by_file(file))
