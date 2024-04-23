@@ -151,3 +151,17 @@ def retriever(question, vector_store=get_chroma_instance()):
     retriever = vector_store.as_retriever()
     return retriever.invoke(question)
 
+
+def find_document_by_file(file, vector_store=get_chroma_instance()):
+    """
+    Finds a document in the Chroma database based on the associated file.
+
+    Args:
+        file: File object to find the associated document.
+        vector_store: Optional. Instance of Chroma. Defaults to the global instance.
+
+    Returns:
+        dict: Document information.
+    """
+    return vector_store.get(where=generate_metadata(file))
+
