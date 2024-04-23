@@ -7,7 +7,7 @@ license = "GNU GENERAL PUBLIC LICENSE v3.0"
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.12"
+python = ">=3.10,<3.13"
 streamlit = "^1.33.0"
 pypdf2 = "^3.0.1"
 langchain = "^0.1.14"
