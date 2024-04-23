@@ -63,3 +63,16 @@ def count_all_documents():
     """
     return get_chroma_collection().count()
 
+
+def generate_metadata(file):
+    """
+    Generates metadata for a given file.
+
+    Args:
+        file: File object for which metadata is to be generated.
+
+    Returns:
+        dict: Metadata dictionary.
+    """
+    return {"filename": file.name}
+
