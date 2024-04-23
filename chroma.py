@@ -53,3 +53,13 @@ def get_chroma_collection(instance=get_chroma_instance()):
     """
     return instance._collection
 
+
+def count_all_documents():
+    """
+    Counts all documents in the Chroma database.
+
+    Returns:
+        int: Total count of documents.
+    """
+    return get_chroma_collection().count()
+
